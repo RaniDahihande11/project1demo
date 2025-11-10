@@ -6,7 +6,12 @@ pipeline {
                 git url:'https://github.com/RaniDahihande11/project1demo.git', branch:'main'
             }
         }
-       
+
+        stage("Cleanup") {
+            steps {
+                bat 'docker rm -f $(docker ps -q)'
+            }
+        }
         stage("Build Docker image") {
             steps {
                 bat 'docker build -t myimage .'
