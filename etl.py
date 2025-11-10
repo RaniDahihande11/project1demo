@@ -1,11 +1,12 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
+
+st.write('Welcome to AVD')
 
 data = {
-    "Task":['Extract','Transform','Load'],
-    "Status":["Completed","Processing","Pending"]
+    "Task": ["Extract2", "Transform", "Load"],
+    "Status": ["Completed", "InProgress", "Pending"]
 }
 
 df = pd.DataFrame(data)
-st.title("Streamit App")
-st.write(df)
+st.write("ETL Processing Status : ", df)
