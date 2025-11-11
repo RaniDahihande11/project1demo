@@ -7,11 +7,7 @@ pipeline {
             }
         }
 
-        stage("Cleanup") {
-            steps {
-                bat 'docker rm -f $(docker ps -q)'
-            }
-        }
+       
         stage("Build Docker image") {
             steps {
                 bat 'docker build -t myimage .'
