@@ -1,22 +1,42 @@
 pipeline {
     agent any
+
+    environment {
+        IMAGE_NAME = "myimage"
+        CONTAINER_NAME = "mycontainer"
+        PORT = "8501"
+    }
+
     stages {
         stage("Checkout Code") {
             steps {
-                git url:'https://github.com/RaniDahihande11/project1demo.git', branch:'main'
+                echo "Checking out code from GitHub..."
+                git url: 'https://github.com/RaniDahihande11/project1demo.git', branch: 'main'
             }
         }
 
-       
-        stage("Build Docker image") {
+        stage("Build Docker Image") {
             steps {
-                bat 'docker build -t myimage .'
+                echo "Building Docker image..."
+                bat "docker build -t ${IMAGE_NAME} ."
             }
         }
-        stage("Create Container") {
+
+        stage("Remove Existing Container") {
             steps {
-                bat 'docker run -d -p 8501:8501 myimage'
+                echo "Removing old container if exists..."
+                bat """
+                    docker ps -a -q --filter "name=${CONTAINER_NAME}" | findstr . && docker rm -f ${CONTAINER_NAME} || echo "No existing container"
+                """
+            }
+        }
+
+        stage("Run Docker Container") {
+            steps {
+                echo "Running new container..."
+                bat "docker run -d -p ${PORT}:${PORT} --name ${CONTAINER_NAME} ${IMAGE_NAME}"
             }
         }
     }
+
 }
